@@ -1,0 +1,44 @@
+CREATE TABLE `board_tb` (
+  `board_no` int NOT NULL AUTO_INCREMENT,
+  `board_title` varchar(200) NOT NULL,
+  `board_writer` varchar(100) NOT NULL,
+  `board_content` text NOT NULL,
+  `indate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`board_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `buy_list_tb` (
+  `list_no` int NOT NULL AUTO_INCREMENT,
+  `item_no` int NOT NULL,
+  `user_no` int NOT NULL,
+  `pay_price` int NOT NULL,
+  `use_point` int NOT NULL,
+  `indate` datetime NOT NULL,
+  PRIMARY KEY (`list_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `item_tb` (
+  `item_no` int NOT NULL AUTO_INCREMENT,
+  `item_nm` varchar(100) NOT NULL,
+  `item_content` text NOT NULL,
+  `item_price` int NOT NULL,
+  `item_file_nm` varchar(100) NOT NULL,
+  `indate` datetime NOT NULL,
+  `modate` datetime NOT NULL,
+  PRIMARY KEY (`item_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `user_tb` (
+  `user_no` int NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(50) NOT NULL,
+  `user_pw` varchar(50) NOT NULL,
+  `user_nm` varchar(50) NOT NULL,
+  `user_address` varchar(100) NOT NULL,
+  `user_phone` varchar(10) NOT NULL,
+  `user_age` int NOT NULL,
+  `user_sex` varchar(1) NOT NULL,
+  `user_point` int NOT NULL,
+  `indate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
