@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/default">
+
+
+<!-- main.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+</th:block>
+
+<div layout:fragment="content" class="container">
+
+    <main role="main" class="container">
+        <div class="starter-template">
+
+            <table class ="table table-bordered">
+                <thead>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>상품 이름</th>
+                    <td th:text="${item.itemNm}"></td>
+                </tr>
+                <tbody>
+                <tr>
+                    <th>상품 등록일</th>
+                    <td th:inline="text">[[${#temporals.format(item.indate, 'yyyy-MM-dd HH:mm')}]]</td>
+                </tr>
+                <tr>
+                    <th>상품 수정일</th>
+                    <td th:inline="text">[[${#temporals.format(item.modate, 'yyyy-MM-dd HH:mm')}]]</td>
+                </tr>
+                <tr>
+                    <th>상품 설명</th>
+                    <td th:text="${item.itemContent}"></td>
+                </tr>
+                <tr>
+                    <th>상품 가격</th>
+                    <td th:text="${item.itemPrice}"></td>
+                </tr>
+                <tr>
+                    <th>보유 포인트</th>
+                    <td th:text="${buyer.userPoint}"></td>
+                </tr>
+                <tr>
+                    <th>사용 포인트</th>
+                    <td>
+                        <input type="number" id="usePoint" value="0" min="0" th:max="${buyer.userPoint}"></input>
+                        <input type="checkbox" id="isUsePoint" onclick="pointCheck()"/>포인트 사용여부
+                    </td>
+                </tr>
+                <tr>
+                    <th>결제 금액</th>
+                    <td>
+                        <span id="buyPrice" th:text="${item.itemPrice}">
+                    </td>
+                </tr>
+                <tr>
+                    <th>상품 이미지</th>
+                    <td>
+<!--                        <input type="image" style="height: 200px; width: 200px" class="form-control" id="file" name="file" th:src="|/images/${item.itemNo}_${item.itemFileNm}|">-->
+                        <input type="image" style="height: 200px; width: 200px" class="form-control" id="file" name="file" th:src="|/images/${item.itemFileNm}|">
+                    </td>
+<!--                    <td th:text="${item.itemFileNm}"></td>-->
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- 수정/삭제 -->
+            <div>
+                <a th:href="@{'/'}">
+                    <button class="btn btn-primary">목록으로</button>
+                </a>
+                <button style="float: right" class="btn btn-warning" id="delete-btn" onclick="itemBuy()">구매하기</button>
+            </div>
+
+            <!-- iamport.payment.js -->
+            <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
+
+
+            <script th:inline="javascript">
+                /*<![CDATA[*/
+                var item = /*[[${item}]]*/ "";
+                /*]]>*/
+
+                /*<![CDATA[*/
+                var buyer = /*[[${buyer}]]*/ "";
+                /*]]>*/
+
+                var itemNo = item.itemNo;
+
+                var IMP = window.IMP;
+                // 식별코드
+                IMP.init("imp36084446");
+
+                function itemBuy(){
+
+                    if (!confirm("구매하시겠습니까?")) return;
+
+                    // 마일리지인지 실제결제인지
+                    var usePoint = document.getElementById('usePoint').value;
+                    var payPrice = document.getElementById('buyPrice').innerText;
+                    var isUsePoint = document.getElementById('isUsePoint').checked;
+
+                    if (payPrice === "0"){
+
+                        $.ajax({
+                            url: "/item/buy",
+                            type: "POST",
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify({
+                                itemNo: item.itemNo,
+                                userNo : buyer.userNo,
+                                usePoint : usePoint,
+                                payPrice : payPrice,
+                                isUsePoint : isUsePoint
+                            }),
+                            success: function(result) {
+                                alert("결제가 성공했습니다.");
+                                location.replace('/');
+                            },
+                            error: function(err){
+                                alert("에러 발생")
+                            }
+                        });
+                    }
+                    else{
+                        var time = dateFormat(new Date);
+
+                        IMP.request_pay({
+                            pg: "html5_inicis",
+                            pay_method: "card",
+                            merchant_uid: item.itemNo + '_' + time ,
+                            name: item.itemNm,
+                            amount: payPrice,
+                            buyer_email: "",
+                            buyer_name: buyer.userNm,
+                            buyer_tel: buyer.userPhone,
+                            buyer_addr: buyer.userAddress,
+                        }, function (rsp){
+
+                            console.log(rsp);
+
+                            if(rsp.success){
+
+                                $.ajax({
+                                    url: "/item/buy",
+                                    type: "POST",
+                                    contentType: "application/json; charset=utf-8",
+                                    data: JSON.stringify({
+                                        itemNo: item.itemNo,
+                                        userNo : buyer.userNo,
+                                        usePoint : usePoint,
+                                        payPrice : payPrice,
+                                        isUsePoint : isUsePoint
+                                    }),
+                                    success: function(result) {
+                                        alert("결제가 성공했습니다.");
+                                        location.replace('/');
+                                    },
+                                    error: function(err){
+                                        alert("에러 발생")
+                                    }
+                                });
+                            }
+                            else {
+                                alert('구매를 실패했습니다.')
+                            }
+                        });
+                    }
+                }
+
+                $('#usePoint').on("blur", pointCheck)
+
+                function pointCheck(){
+
+                    var isCheck = document.getElementById('isUsePoint');
+                    var itemPrice = item.itemPrice;
+                    var userPoint = buyer.userPoint;
+                    var nowPoint = document.getElementById('usePoint');
+                    var buyPrice = document.getElementById('buyPrice');
+
+                    if (!isCheck.checked){
+                        var buyPrice = document.getElementById('buyPrice');
+                        buyPrice.innerText = itemPrice;
+
+                        return;
+                    }
+
+                    if (itemPrice < nowPoint.value){
+                        //alert('상품 금액보다 사용 포인트가 큽니다.');
+                        nowPoint.value = itemPrice;
+                    }
+                    if (userPoint < nowPoint.value){
+                        //alert('보유 포인트보다 초과한 포인트는 사용할 수 없습니다.');
+                        nowPoint.value = userPoint;
+                    }
+
+                    buyPrice.innerText = itemPrice - nowPoint.value;
+
+                }
+
+                function dateFormat(date) {
+                    let month = date.getMonth() + 1;
+                    let day = date.getDate();
+                    let hour = date.getHours();
+                    let minute = date.getMinutes();
+                    let second = date.getSeconds();
+
+                    month = month >= 10 ? month : '0' + month;
+                    day = day >= 10 ? day : '0' + day;
+                    hour = hour >= 10 ? hour : '0' + hour;
+                    minute = minute >= 10 ? minute : '0' + minute;
+                    second = second >= 10 ? second : '0' + second;
+
+                    return date.getFullYear() + month + day + "_" + hour + minute + second;
+                }
+            </script>
+        </div>
+
+    </main>
+
+</div>
+</html>

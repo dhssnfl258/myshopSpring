@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/default">
+
+
+
+<!-- main.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+</th:block>
+
+<div layout:fragment="content" class="container">
+
+    <main role="main" class="container">
+        <div class="starter-template">
+
+            <!-- 글쓰기 버튼 -->
+            <a style="float: right" class="btn btn-primary" th:href="@{/board/write}">글쓰기</a>
+            <!-- 검색 form -->
+            <form action="/board/list" method="GET">
+                <div>
+                    <input name="word" type="text" placeholder="검색어를 입력해주세요.">
+                    <button class="btn btn-primary">검색하기</button>
+                </div>
+
+            </form>
+            <table class="table table-bordered">
+                <!-- CONTENTS !-->
+                <thead>
+                <tr>
+                    <th class="col-md-1">번호</th>
+                    <th class="col-md-4">글제목</th>
+                    <th class="col-md-1">작성자</th>
+                    <th class="col-md-2">작성일</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <!-- CONTENTS !-->
+                <tr th:each="board : ${list}">
+                    <td th:text="${board.boardNo}"></td>
+                    <td><a th:href="'/board/detail/'+${board.boardNo}" th:text="${board.boardTitle}"></a></td>
+                    <td th:text="${board.boardWriter}"></td>
+                    <td th:text="${board.indate} ? ${#temporals.format(board.indate,'yyyy-MM-dd HH:mm')} : ${board.indate}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <!-- Pagination -->
+            <div style="margin: 10px">
+                <span th:each="pageNum : ${pageList}" th:inline="text">
+                    <a th:href="@{'/board/list/?page=' + ${pageNum}}">[[${pageNum}]]</a>
+                </span>
+            </div>
+        </div>
+    </main>
+
+    <script th:inline="javascript">
+
+
+
+    </script>
+
+</div>
+</html>

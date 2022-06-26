@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/default">
+
+
+<!--&lt;!&ndash; main.html 고유 스크립트 추가 &ndash;&gt;-->
+<!--<th:block layout:fragment="script">-->
+<!--</th:block>-->
+
+
+
+
+<div layout:fragment="content" class="container">
+
+    <script>
+
+        $(function() {
+            getItems();
+        });
+
+        function getItems(){
+            $.ajax({
+                url: "/getItems",
+                type: "GET",
+                success: function(result) {
+
+                    const list = result.data;
+
+                    const masterDiv = document.getElementById('itemList');
+
+                    list.map(e => {
+                        console.log(e)
+
+                        const itemDiv = document.createElement('div');
+                        itemDiv.setAttribute('class', 'col mb-5');
+
+                        const cardDiv = document.createElement('div');
+                        cardDiv.setAttribute('class', 'card h-100');
+
+                        const itemImg = document.createElement('img');
+                        itemImg.setAttribute('class', 'card-img-top');
+                        itemImg.setAttribute('src', '/images/' + e.itemFileNm);
+
+                        const cardBodyDiv = document.createElement('div');
+                        cardBodyDiv.setAttribute('class', 'card-body p-4');
+
+                        const textDiv = document.createElement('div');
+                        textDiv.setAttribute('class', 'text-center');
+
+                        const itemNm = document.createElement('h5');
+                        itemNm.setAttribute('class', 'fw-bolder');
+                        itemNm.innerText += e.itemNm;
+
+                        const price = document.createElement('p');
+                        price.innerText += e.itemPrice;
+
+                        const cardFooter = document.createElement('div');
+                        cardFooter.setAttribute('class', 'card-footer p-4 pt-0 border-top-0 bg-transparent');
+
+                        const footerText = document.createElement('div');
+                        footerText.setAttribute('class', 'text-center');
+
+                        const itemBtn = document.createElement('a');
+                        itemBtn.setAttribute('class', 'btn btn-outline-dark mt-auto');
+                        itemBtn.setAttribute('onclick', 'goItemDetail(' + e.itemNo + ')');
+                        itemBtn.innerText += '구매하기'
+
+                        footerText.appendChild(itemBtn);
+                        cardFooter.appendChild(footerText);
+
+                        textDiv.appendChild(itemNm);
+                        textDiv.appendChild(price);
+
+                        cardBodyDiv.appendChild(textDiv);
+                        cardDiv.appendChild(itemImg);
+                        cardDiv.appendChild(cardBodyDiv);
+                        cardDiv.appendChild(cardFooter);
+                        itemDiv.appendChild(cardDiv);
+                        masterDiv.appendChild(itemDiv);
+                    })
+                },
+                error: function(err){
+                    alert("에러 발생")
+                }
+            });
+        }
+
+        function goItemDetail(itemNo){
+            console.log(itemNo)
+            $.ajax({
+                url: "/users/loginCheck",
+                type: "GET",
+                success: function(result) {
+                    if (result.message){
+                        alert(result.message);
+                        location.replace('/users/login');
+                    }
+                    else{
+                        location.replace('/item/detail/' + itemNo);
+                    }
+                },
+                error: function(err){
+                    alert("에러 발생")
+                }
+            });
+        }
+    </script>
+
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 mt-5">
+            <div id="itemList" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+
+<!--                <div class="col mb-5">-->
+<!--                    <div class="card h-100">-->
+<!--                        &lt;!&ndash; Product image&ndash;&gt;-->
+<!--                        <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />-->
+<!--                        &lt;!&ndash; Product details&ndash;&gt;-->
+<!--                        <div class="card-body p-4">-->
+<!--                            <div class="text-center">-->
+<!--                                &lt;!&ndash; Product name&ndash;&gt;-->
+<!--                                <h5 class="fw-bolder">Fancy Product</h5>-->
+<!--                                &lt;!&ndash; Product price&ndash;&gt;-->
+<!--                                $40.00 - $80.00-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash; Product actions&ndash;&gt;-->
+<!--                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">-->
+<!--                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+            </div>
+        </div>
+    </section>
+</div>
+</html>

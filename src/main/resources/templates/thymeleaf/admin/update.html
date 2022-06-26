@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/default">
+
+
+
+<!-- main.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+</th:block>
+
+<div layout:fragment="content" class="container">
+
+    <main role="main" class="container">
+        <div class="starter-template">
+
+            <input type="hidden" name="_method" value="put"/>
+            <input type="hidden" id="no" name="no" th:value="${item.itemNo}"/>
+            <input type="hidden" id="indate" name="indate" th:value="${item.indate}"/>
+
+            상품 이름 : <input type="text" class="form-control" id="nm" name="nm" th:value="${item.itemNm}"> <br>
+            상품 설명 : <input type="text" class="form-control" id="content" name="content" th:value="|${item.itemContent}|"> <br>
+            상품 가격 : <input type="text" class="form-control" id="price" name="price" th:value="|${item.itemPrice}|"> <br>
+            기존 상품 이미지 : <input type="image" style="height: 200px; width: 200px" class="form-control" id="fileName" name="fileName" th:src="|/images/${item.itemFileNm}|" th:value="${item.itemFileNm}"> <br>
+            변경할 상품 이미지 : <input type="file" class="form-control" id="file" name="file"> <br>
+
+
+            <div class="box-footer">
+                <button type="button" class="btn btn-primary" onclick="detailUpdate()">수정</button>
+                <a th:href="@{'/admin/detail/' + ${item.itemNo}}" class="btn btn-secondary">취소</a>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function detailUpdate(){
+            const no = document.getElementById("no").value;
+            const indate = document.getElementById("indate").value;
+            const nm = document.getElementById("nm").value;
+            const content = document.getElementById("content").value;
+            const price = document.getElementById("price").value;
+            const file = document.getElementById("fileName").value;
+            const fileElement = document.querySelector('#file');
+            const newFile = fileElement.files[0];
+
+            if (!nm){
+                alert("상품 이름을 입력해주세요.");
+                return;
+            }
+            if (!content){
+                alert("상품 설명을 입력해주세요.");
+                return;
+            }
+            if (!price){
+                alert("상품 가격을 입력해주세요.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("no", no);
+            formData.append("nm", nm);
+            formData.append("content", content);
+            formData.append("price", price);
+            formData.append("indate", indate);
+            formData.append("fileName", file);
+            formData.append("newFile", newFile);
+
+            console.log(formData)
+
+            $.ajax({
+                url: "/admin/update",
+                type: "PUT",
+                processData: false,
+                contentType: false,
+                // contentType: "multipart/form-data",
+                data: formData,
+                success: function(result) {
+                    console.log(result)
+                    alert(result.message);
+
+                    if (result.data){
+                        location.replace('/admin/detail/' + no);
+                    }
+                },
+                error: function(err){
+                    alert("에러 발생")
+                }
+            });
+        }
+    </script>
+
+</div>
+</html>

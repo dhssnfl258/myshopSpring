@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/default">
+
+
+
+<!-- main.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+</th:block>
+
+<div layout:fragment="content" class="container">
+
+
+
+    <main class="container">
+        <div class="page-header">
+            <h1>상품 등록</h1>
+        </div>
+        <div class="starter-template">
+            <form name="form" method="post" action="/admin/add" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label style="float: left" for="nm" class="col-sm-2 control-label">상품 이름</label>
+                    <div class="col-sm-10" style="margin-top: 10px;">
+                        <input type="text" class="form-control" id="nm" name="nm" placeholder="상품 이름"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label style="float: left" for="content" class="col-sm-2 control-label">상품 설명</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="content" name="content" placeholder="상품 설명을 입력해 주세요."/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label style="float: left" for="price" class="col-sm-2 control-label">가격</label>
+                    <div class="col-sm-10" style="margin-top: 10px;">
+                        <input type="text" class="form-control" id="price" name="price" /> 원
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label style="float: left" for="file" class="col-sm-2 control-label">상품 이미지</label>
+                    <div class="col-sm-10" style="margin-top: 10px;">
+                        <input type="file" class="form-control" id="file" name="file"/>
+                    </div>
+                </div>
+
+                <div class="btn_wrap text-center">
+                    <a th:href="@{/admin/list}" class="btn btn-secondary">뒤로 가기</a>
+                    <button type="button" class="btn btn-primary" onclick="itemAdd()">저장 하기</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script th:inline="javascript">
+
+        function itemAdd(){
+
+            var nm = document.getElementById("nm").value;
+            var content = document.getElementById("content").value;
+            var price = document.getElementById("price").value;
+            const fileElement = document.querySelector('#file');
+            const file = fileElement.files[0];
+
+            if (!nm){
+                alert("상품 이름을 입력해주세요.");
+                return;
+            }
+            if (!content){
+                alert("상품 설명을 입력해주세요.");
+                return;
+            }
+            if (!price){
+                alert("상품 가격을 입력해주세요.");
+                return;
+            }
+            if (!file){
+                alert("상품 이미지를 등록해주세요.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("nm", nm);
+            formData.append("content", content);
+            formData.append("price", price);
+            formData.append("file", file);
+
+            $.ajax({
+                url: "/admin/add",
+                type: "POST",
+                processData: false,
+                contentType: false,
+                // contentType: "multipart/form-data",
+                data: formData,
+                success: function(result) {
+                    console.log(result)
+                    alert(result.message);
+
+                    if (result.data){
+                        location.replace('/admin/list');
+                    }
+                },
+                error: function(err){
+                    alert("에러 발생")
+                }
+            });
+        }
+
+    </script>
+</div>
+</html>

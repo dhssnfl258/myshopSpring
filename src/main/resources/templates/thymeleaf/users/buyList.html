@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/default">
+
+
+
+<!-- main.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+</th:block>
+
+<div layout:fragment="content" class="container">
+
+    <main role="main" class="container">
+        <div class="starter-template">
+
+            <table class="table table-bordered">
+                <!-- CONTENTS !-->
+                <thead>
+                <tr>
+                    <th class="col-md-1">구매 번호</th>
+                    <th class="col-md-4">상품 이름</th>
+                    <th class="col-md-2">결제 가격</th>
+                    <th class="col-md-2">사용 포인트</th>
+                    <th class="col-md-2">구매일</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <!-- CONTENTS !-->
+                <tr th:each="list : ${buyList}">
+                    <td th:text="${list.listNo}"></td>
+                    <td th:text="${list.itemNm}"></td>
+                    <td th:text="${list.payPrice}"></td>
+                    <td th:text="${list.usePoint}"></td>
+                    <td th:text="${list.indate} ? ${#temporals.format(list.indate,'yyyy-MM-dd HH:mm')} : ${list.indate}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <!-- Pagination -->
+            <div style="margin: 10px">
+            <span th:each="pageNum : ${pageList}" th:inline="text">
+                <a th:href="@{'/board/list/?page=' + ${pageNum}}">[[${pageNum}]]</a>
+            </span>
+            </div>
+
+
+        </div>
+    </main>
+
+    <script th:inline="javascript">
+
+
+
+    </script>
+
+</div>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/default">
+
+
+
+<!-- main.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+</th:block>
+
+<div layout:fragment="content" class="container">
+
+    <main role="main" class="container">
+        <div class="starter-template">
+
+            <input type="hidden" name="_method" value="put"/>
+            <input type="hidden" id="no" name="no" th:value="${board.boardNo}"/>
+            <input type="hidden" id="indate" name="indate" th:value="${board.indate}"/>
+
+            제목 : <input type="text" class="form-control" id="title" name="title" th:value="${board.boardTitle}"> <br>
+            작성자 : <input type="text" class="form-control" id="writer" name="writer" th:value="${board.boardWriter}"> <br>
+            <textarea class="form-control" id="content" name="content" th:text="${board.boardContent}"></textarea><br>
+
+            <div class="box-footer">
+                <button type="button" class="btn btn-primary" onclick="detailUpdate()">수정</button>
+                <a th:href="@{'/board/detail/' + ${board.boardNo}}" class="btn btn-secondary">취소</a>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function detailUpdate(){
+            var no = document.getElementById("no").value;
+            var indate = document.getElementById("indate").value;
+            var title = document.getElementById("title").value;
+            var writer = document.getElementById("writer").value;
+            var content = document.getElementById("content").value;
+
+            if (!title){
+                alert("제목을 입력해주세요.");
+                return;
+            }
+            if (!writer){
+                alert("작성자를 입력해주세요.");
+                return;
+            }
+            if (!content){
+                alert("내용을 입력해주세요.");
+                return;
+            }
+
+
+            $.ajax({
+                url: "/board/update",
+                type: "PUT",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({
+                    boardNo: no,
+                    boardTitle: title,
+                    boardWriter : writer,
+                    boardContent : content,
+                    indate : indate,
+                }),
+                success: function(result) {
+                    alert("저장을 성공했습니다.");
+                    location.replace('/board/detail/' + no);
+                },
+                error: function(err){
+                    alert("에러 발생")
+                }
+            });
+        }
+    </script>
+
+</div>
+</html>

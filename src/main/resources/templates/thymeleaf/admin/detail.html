@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/default">
+
+
+<!-- main.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+</th:block>
+
+<div layout:fragment="content" class="container">
+
+    <main role="main" class="container">
+        <div class="starter-template">
+
+            <table class ="table table-bordered">
+                <thead>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>상품 이름</th>
+                    <td th:text="${item.itemNm}"></td>
+                </tr>
+                <tbody>
+                <tr>
+                    <th>상품 등록일</th>
+                    <td th:inline="text">[[${#temporals.format(item.indate, 'yyyy-MM-dd HH:mm')}]]</td>
+                </tr>
+                <tr>
+                    <th>상품 수정일</th>
+                    <td th:inline="text">[[${#temporals.format(item.modate, 'yyyy-MM-dd HH:mm')}]]</td>
+                </tr>
+                <tr>
+                    <th>상품 설명</th>
+                    <td th:text="${item.itemContent}"></td>
+                </tr>
+                <tr>
+                    <th>상품 가격</th>
+                    <td th:text="${item.itemPrice}"></td>
+                </tr>
+                <tr>
+                    <th>상품 이미지</th>
+                    <td>
+<!--                        <input type="image" style="height: 200px; width: 200px" class="form-control" id="file" name="file" th:src="|/images/${item.itemNo}_${item.itemFileNm}|">-->
+                        <input type="image" style="height: 200px; width: 200px" class="form-control" id="file" name="file" th:src="|/images/${item.itemFileNm}|">
+                    </td>
+<!--                    <td th:text="${item.itemFileNm}"></td>-->
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- 수정/삭제 -->
+            <div>
+                <a style="float: right" class="btn btn-primary" th:href="@{/admin/list}">목록으로</a>
+
+                <a th:href="@{'/admin/update/' + ${item.itemNo}}">
+                    <button class="btn btn-primary">수정</button>
+                </a>
+                <button class="btn btn-warning" id="delete-btn" onclick="itemDelete()">삭제</button>
+            </div>
+
+            <script th:inline="javascript">
+                /*<![CDATA[*/
+                var item = /*[[${item}]]*/ "";
+                /*]]>*/
+
+                var itemNo = item.itemNo;
+
+                function itemDelete(){
+
+                    if (!confirm("삭제하시겠습니까?")) return;
+
+                    $.ajax({
+                        url: "/admin/delete/" + itemNo,
+                        type: "DELETE",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({
+                            itemNo: itemNo,
+                        }),
+                        success: function(result) {
+                            alert("삭제를 성공했습니다.");
+                            location.replace('/admin/list');
+                        },
+                        error: function(err){
+                            console.log(err)
+                            alert("에러 발생")
+                        }
+                    });
+                }
+            </script>
+        </div>
+
+    </main>
+
+</div>
+</html>

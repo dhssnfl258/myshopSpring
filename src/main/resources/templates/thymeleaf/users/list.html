@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/default">
+
+
+
+<!-- main.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+</th:block>
+
+<div layout:fragment="content" class="container">
+
+    <main role="main" class="container">
+        <div class="starter-template">
+
+            <table class="table table-bordered">
+                <!-- CONTENTS !-->
+                <thead>
+                <tr>
+                    <th class="col-md-1">번호</th>
+                    <th class="col-md-4">상품 이름</th>
+                    <th class="col-md-2">가격</th>
+                    <th class="col-md-4">이미지</th>
+                    <th class="col-md-2">생성일</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <!-- CONTENTS !-->
+                <tr th:each="item : ${list}">
+                    <td th:text="${item.itemNo}"></td>
+                    <td><a th:href="'/admin/detail/'+${item.itemNo}" th:text="${item.itemNm}"></a></td>
+                    <td th:text="${item.itemPrice}"></td>
+                    <td th:text="${item.itemFileNm}"></td>
+                    <td th:text="${item.indate} ? ${#temporals.format(item.indate,'yyyy-MM-dd HH:mm')} : ${item.indate}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <!-- Pagination -->
+            <div style="margin: 10px">
+            <span th:each="pageNum : ${pageList}" th:inline="text">
+                <a th:href="@{'/board/list/?page=' + ${pageNum}}">[[${pageNum}]]</a>
+            </span>
+                <!-- 글쓰기 버튼 -->
+                <a style="float: right" class="btn btn-primary" th:href="@{/admin/add}">상품등록</a>
+            </div>
+
+            <!-- 검색 form -->
+            <form action="/board/search" method="GET">
+                <div>
+                    <input name="keyword" type="text" placeholder="검색어를 입력해주세요.">
+                    <button class="btn btn-primary">검색하기</button>
+                </div>
+
+            </form>
+
+        </div>
+    </main>
+
+    <script th:inline="javascript">
+
+
+
+    </script>
+
+</div>
+</html>
