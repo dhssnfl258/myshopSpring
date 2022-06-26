@@ -1,7 +1,7 @@
 # myshopSpring
  💡나만의 쇼핑몰 만들기
 <a href= "https://docs.google.com/presentation/d/11BO7BsA2eAHIZ1JmWEcK3b6P_anIkQ21tIGKnJC1vnc/edit?usp=sharing">페이지 설명</a>
-<h2>시연영상</h2>
+<!-- <h2>시연영상</h2> -->
 <video width="100%" height="100%" controls="controls">
   <source src="/동영상 파일이 위치한 경로/동영상_이름.확장자명(mp4/webm/ogg)" type="video/mp4">
 </video>
