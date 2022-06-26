@@ -3,13 +3,14 @@
 <h1>☄️ stack</h1>
 <br>
 <img src= "https://img.shields.io/badge/Java-007396?style=flat-square&logo=java&logoColor=white"
-	>
-<img src= "https://img.shields.io/badge/Spring-6DB33F?style=flat-square&logo=Spring&logoColor=white">
+	><img src= "https://img.shields.io/badge/Spring-6DB33F?style=flat-square&logo=Spring&logoColor=white">
    +jpa
    +thymeleaf
    +mysql
 
--Restful api
+<h2>기능</h2>
+<hr>
+<h4>-Restful api</h4>
 <br>
 <ul>
 	<li>로그인, 회원가입, 게시판</li>
