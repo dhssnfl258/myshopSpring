@@ -1,5 +1,6 @@
 # myshopSpring
  💡나만의 쇼핑몰 만들기
+<a href= "https://docs.google.com/presentation/d/11BO7BsA2eAHIZ1JmWEcK3b6P_anIkQ21tIGKnJC1vnc/edit?usp=sharing">페이지 설명</a>
 <h1>☄️ stack</h1>
 <br>
 <img src= "https://img.shields.io/badge/Java-007396?style=flat-square&logo=java&logoColor=white"
