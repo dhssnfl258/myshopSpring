@@ -1,6 +1,6 @@
 # myshopSpring
  💡나만의 쇼핑몰 만들기
-☄️ stack
+<h1>☄️ stack</h1>
 <br>
 <img src= "https://img.shields.io/badge/Java-007396?style=flat-square&logo=java&logoColor=white"
 	>
