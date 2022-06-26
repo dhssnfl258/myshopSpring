@@ -9,8 +9,7 @@
    +mysql
 
 <h2>기능</h2>
-<hr>
-<h4>-Restful api</h4>
+<h3>-Restful api</h3>
 <br>
 <ul>
 	<li>로그인, 회원가입, 게시판</li>
@@ -21,11 +20,13 @@
 
 
 <h3>이미지 경로지정</h3>
+<br>
 폴더 경로를 mysql 테이블에 저장하는 방식.
 -> 경로설정 필요. absolutepath 부분.
 -> 원하는 경로에 fileUpload/images 폴더 생성후 해당경로를 webconfig, AdminController 부분에 지정해준다.
 
 <h1>☄️Trouble shooting</h1>
+<br>
 <p>
 이미지 저장방식
 	</p>
